@@ -1,0 +1,283 @@
+<?php
+
+namespace ActiveLAMP\Taxonomy\Taxonomy;
+
+use ActiveLAMP\Taxonomy\Entity\EntityTermInterface;
+use ActiveLAMP\Taxonomy\Entity\TermInterface;
+use ActiveLAMP\Taxonomy\Entity\VocabularyInterface;
+use ActiveLAMP\Taxonomy\Entity\VocabularyFieldInterface;
+use ActiveLAMP\Taxonomy\Metadata\MetadataFactory;
+use ActiveLAMP\Taxonomy\Metadata\Reader\AnnotationReader;
+use ActiveLAMP\Taxonomy\Metadata\TaxonomyMetadata;
+use ActiveLAMP\Taxonomy\Model\EntityTermRepositoryInterface;
+use ActiveLAMP\Taxonomy\Model\TermRepositoryInterface;
+use ActiveLAMP\Taxonomy\Model\VocabularyRepositoryInterface;
+use ActiveLAMP\Taxonomy\Model\VocabularyFieldFactory;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\ObjectManager;
+
+
+/**
+ * @author Bez Hermoso <bez@activelamp.com>
+ */
+abstract class AbstractTaxonomyService implements TaxonomyServiceInterface
+{
+    /**
+     * @var VocabularyRepositoryInterface
+     */
+    protected $vocabularies;
+
+    /**
+     * @var TermRepositoryInterface
+     */
+    protected $terms;
+
+    /**
+     * @var EntityTermRepositoryInterface
+     */
+    protected $entityTerms;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
+    protected $em;
+
+    /**
+     * @var TaxonomyMetadata|null
+     */
+    protected $metadata;
+
+    /**
+     * @var TaxonomizedEntityManager
+     */
+    protected $taxonomizedEntityManager;
+
+    /**
+     * @var \ActiveLAMP\Taxonomy\Metadata\MetadataFactory
+     */
+    protected $metadataFactory;
+
+    /**
+     * @param ObjectManager $em
+     * @param string|null $vocabularyClass
+     * @param string|null $termClass
+     * @param string|null $entityTermClass
+     */
+    public function __construct(
+        ObjectManager $em,
+        $vocabularyClass = null,
+        $termClass = null,
+        $entityTermClass = null
+    ) {
+        $this->em = $em;
+
+        $this->vocabularies =
+            $em->getRepository('ALTaxonomyBundle:Vocabulary');
+        $this->terms =
+            $em->getRepository('ALTaxonomyBundle:Term');
+        $this->entityTerms =
+            $em->getRepository('ALTaxonomyBundle:EntityTerm');
+
+
+        $this->metadataFactory =
+            new MetadataFactory(new AnnotationReader());
+        $this->taxonomizedEntityManager =
+            new TaxonomizedEntityManager($this, new VocabularyFieldFactory($em, $this->entityTerms));
+
+    }
+
+    /**
+     * @return TaxonomyMetadata
+     */
+    public function getMetadata()
+    {
+        if ($this->metadata === null) {
+            $this->metadata = $this->metadataFactory->getMetadata($this->em);
+        }
+        return $this->metadata;
+    }
+
+    /**
+     * @return \ActiveLAMP\Taxonomy\Entity\VocabularyInterface[]|array
+     */
+    public function findAllVocabularies()
+    {
+        return $this->vocabularies->findAll();
+    }
+
+    /**
+     * @return \ActiveLAMP\Taxonomy\Entity\TermInterface[]|array
+     */
+    public function findAllTerms()
+    {
+        return $this->terms->findAll();
+    }
+
+    /**
+     * @param $name
+     * @return \ActiveLAMP\Taxonomy\Entity\VocabularyInterface[]
+     */
+    public function findVocabularyByName($name)
+    {
+        return $this->vocabularies->findByName($name);
+    }
+
+    /**
+     * @param $vocabulary
+     * @return ArrayCollection
+     */
+    public function findTermsInVocabulary($vocabulary)
+    {
+        if (is_scalar($vocabulary)) {
+            $vocabulary = $this->findVocabularyByName($vocabulary);
+        }
+
+        return new ArrayCollection($this->terms->findByVocabulary($vocabulary));
+    }
+
+    /**
+     * @param $id
+     * @return TermInterface
+     */
+    public function findTermById($id)
+    {
+        return $this->terms->findById($id);
+    }
+
+    /**
+     * @param $name
+     * @return TermInterface
+     */
+    public function findTermByName($name)
+    {
+        return $this->terms->findByName($name);
+    }
+
+    /**
+     * @param TermInterface $term
+     */
+    public function deleteTerm(TermInterface $term)
+    {
+        $this->em->remove($term);
+        $this->em->flush();
+    }
+
+    /**
+     * @param TermInterface $term
+     * @throws \DomainException
+     */
+    public function saveTerm(TermInterface $term)
+    {
+        if (!$term->getVocabulary()) {
+            throw new \DomainException('Term must be assigned to a vocabulary before persisting it.');
+        }
+
+        $this->em->persist($term);
+        $this->em->flush();
+    }
+
+    /**
+     * @param VocabularyInterface $vocabulary
+     */
+    public function deleteVocabulary(VocabularyInterface $vocabulary)
+    {
+        $this->em->remove($vocabulary);
+        $this->em->flush();
+    }
+
+    /**
+     * @param VocabularyInterface $vocabulary
+     */
+    public function saveVocabulary(VocabularyInterface $vocabulary)
+    {
+        $this->em->persist($vocabulary);
+        $this->em->flush();
+    }
+
+    /**
+     * @param EntityTermInterface $entityTerm
+     * @param bool $flush
+     * @throws \LogicException
+     */
+    public function saveEntityTerm(EntityTermInterface $entityTerm, $flush = true)
+    {
+        $entity = $entityTerm->getEntity();
+        $metadata = $this->getMetadata()->getEntityMetadata($entity);
+        $id = $metadata->extractIdentifier($entity);
+
+        if ($id == null) {
+            throw new \LogicException('The entity you wish to tag must be persisted first. Identifier cannot be null or false.');
+        }
+
+        $entityTerm->setEntityIdentifier($id);
+        $entityTerm->setEntityType($metadata->getType());
+
+        $this->em->persist($entityTerm);
+
+        if ($flush === true) {
+            $this->em->flush();
+        }
+    }
+
+    /**
+     * @param $entity
+     * @throws \RuntimeException
+     */
+    public function loadVocabularyFields($entity)
+    {
+        $this->taxonomizedEntityManager->mountVocabularyFields($entity);
+    }
+
+    /**
+     * @param $entity
+     * @param bool $flush
+     */
+    public function saveTaxonomies($entity, $flush = true)
+    {
+        $metadata = $this->getMetadata()->getEntityMetadata($entity);
+        $dirty = false;
+
+        foreach ($metadata->getVocabularies() as $vocabMetadata) {
+
+            $field = $vocabMetadata->extractValueInField($entity);
+
+            if (!$field instanceof VocabularyFieldInterface) {
+                $this->taxonomizedEntityManager->mountVocabularyField($entity, $vocabMetadata->getName());
+                $field = $vocabMetadata->extractValueInField($entity);
+            }
+
+            if (!$field->isDirty()) {
+                continue;
+            }
+
+            $inserts = $field->getInsertDiff();
+            $deletes = $field->getDeleteDiff();
+
+            /** @var $eTerm EntityTermInterface */
+            foreach ($inserts as $eTerm) {
+                $eTerm->setEntity($entity);
+                $this->saveEntityTerm($eTerm, false);
+                $dirty = true;
+            }
+
+            foreach ($deletes as $eTerm) {
+                $this->em->remove($eTerm);
+                $dirty = true;
+            }
+
+            $field->setDirty(false);
+        }
+
+        if ($dirty === true && $flush === true) {
+            $this->em->flush();
+        }
+    }
+
+    /**
+     * @return ObjectManager
+     */
+    public function getEntityManager()
+    {
+        return $this->em;
+    }
+}
