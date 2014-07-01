@@ -18,16 +18,30 @@ use Doctrine\ORM\EntityManager;
  */
 class TaxonomyService extends AbstractTaxonomyService
 {
+    /**
+     * @var array
+     */
     protected $subscribers;
 
-    public function __construct(ObjectManager $manager)
-    {
+    /**
+     * @param ObjectManager $manager
+     * @param string $vocabularyClass
+     * @param string $termClass
+     * @param string $entityTermClass
+     * @throws \InvalidArgumentException
+     */
+    public function __construct(
+        ObjectManager $manager,
+        $vocabularyClass,
+        $termClass,
+        $entityTermClass
+    ) {
         /** @var $manager EntityManager */
         if (!$manager instanceof EntityManager) {
             throw new \InvalidArgumentException(sprintf('%s requires Doctrine\\ORM\\EntityManager.', __CLASS__));
         }
 
-        parent::__construct($manager);
+        parent::__construct($manager, $vocabularyClass, $termClass, $entityTermClass);
 
         $this->subscribers = array(
             new LoadVocabularyFields($this),
@@ -57,6 +71,9 @@ class TaxonomyService extends AbstractTaxonomyService
         }
     }
 
+    /**
+     *
+     */
     public function detach()
     {
         /** @var $events EventManager */

@@ -58,26 +58,44 @@ abstract class AbstractTaxonomyService implements TaxonomyServiceInterface
     protected $metadataFactory;
 
     /**
+     * @var string
+     */
+    protected $vocabularyClass;
+
+    /**
+     * @var string
+     */
+    protected $termClass;
+
+    /**
+     * @var string
+     */
+    protected $entityTermClass;
+
+    /**
      * @param ObjectManager $em
-     * @param string|null $vocabularyClass
-     * @param string|null $termClass
-     * @param string|null $entityTermClass
+     * @param $vocabularyClass
+     * @param $termClass
+     * @param $entityTermClass
      */
     public function __construct(
         ObjectManager $em,
-        $vocabularyClass = null,
-        $termClass = null,
-        $entityTermClass = null
+        $vocabularyClass,
+        $termClass,
+        $entityTermClass
     ) {
         $this->em = $em;
 
         $this->vocabularies =
-            $em->getRepository('ALTaxonomyBundle:Vocabulary');
+            $em->getRepository($vocabularyClass);
         $this->terms =
-            $em->getRepository('ALTaxonomyBundle:Term');
+            $em->getRepository($termClass);
         $this->entityTerms =
-            $em->getRepository('ALTaxonomyBundle:EntityTerm');
+            $em->getRepository($entityTermClass);
 
+        $this->vocabularyClass = $vocabularyClass;
+        $this->termClass = $termClass;
+        $this->entityTermClass = $entityTermClass;
 
         $this->metadataFactory =
             new MetadataFactory(new AnnotationReader());

@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bezalelhermoso
- * Date: 6/4/14
- * Time: 10:30 AM
- */
 
-namespace ActiveLAMP\Taxonomy\Entity\Repository;
+namespace ActiveLAMP\Taxonomy\Doctrine\ORM;
 
 use ActiveLAMP\Taxonomy\Entity\VocabularyInterface;
 use ActiveLAMP\Taxonomy\Model\VocabularyRepositoryInterface;

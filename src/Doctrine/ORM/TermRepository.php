@@ -6,7 +6,7 @@
  * Time: 10:31 AM
  */
 
-namespace ActiveLAMP\Taxonomy\Entity\Repository;
+namespace ActiveLAMP\Taxonomy\Doctrine\ORM;
 
 
 use ActiveLAMP\Taxonomy\Entity\TermInterface;
