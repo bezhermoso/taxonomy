@@ -1,0 +1,41 @@
+ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\EntityTerm:
+    type: entity
+    repositoryClass: ActiveLAMP\Taxonomy\Entity\Repository\EntityTermRepository
+    fields:
+        id:
+            type: integer
+            scale: 0
+            length: null
+            unique: true
+            nullable: false
+            precision: 0
+            id: true
+            generator:
+                strategy: IDENTITY
+        entityType:
+            type: string
+            scale: 0
+            length: 100
+            unique: false
+            nullable: false
+            precision: 0
+            column: entity_type
+        entityIdentifier:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            column: entity_id
+    manyToOne:
+        term:
+            targetEntity: TermInterface
+            cascade: {  }
+            mappedBy: null
+            inversedBy: entityTerms
+            joinColumns:
+                term_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

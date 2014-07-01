@@ -1,0 +1,55 @@
+Term:
+    type: mappedSuperclass
+    repositoryClass: ActiveLAMP\Taxonomy\Entity\Repository\TermRepository
+    fields:
+        id:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+            id: true
+            generator:
+                strategy: IDENTITY
+        name:
+            type: string
+            scale: 0
+            length: 255
+            unique: true
+            nullable: false
+            precision: 0
+        label:
+            type: string
+            scale: 0
+            length: 255
+            unique: false
+            nullable: false
+            precision: 0
+        weight:
+            type: integer
+            scale: 0
+            length: null
+            unique: false
+            nullable: false
+            precision: 0
+    manyToOne:
+        vocabulary:
+            targetEntity: VocabularyInterface
+            cascade: {  }
+            mappedBy: null
+            inversedBy: terms
+            joinColumns:
+                vocabulary_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    oneToMany:
+        entityTerms:
+            targetEntity: EntityTermInterface
+            cascade:
+                - remove
+            mappedBy: term
+            inversedBy: null
+            orphanRemoval: false
+            orderBy: null
+    lifecycleCallbacks: {  }
