@@ -1,0 +1,26 @@
+ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\UserRole:
+    type: entity
+    fields:
+        id:
+            type: integer
+            scale: 0
+            length: null
+            unique: true
+            nullable: false
+            precision: 0
+            id: true
+            generator:
+                strategy: IDENTITY
+        name:
+            type: string
+            length: 20
+            unique: false
+            nullable: true
+            precision: 0
+
+        label:
+            type: string
+            length: 50
+            unique: false
+            nullable: true
+            precision: 0

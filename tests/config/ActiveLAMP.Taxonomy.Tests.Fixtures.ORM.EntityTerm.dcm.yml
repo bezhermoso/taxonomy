@@ -30,7 +30,7 @@ ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\EntityTerm:
             column: entity_id
     manyToOne:
         term:
-            targetEntity: TermInterface
+            targetEntity: ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Term
             cascade: {  }
             mappedBy: null
             inversedBy: entityTerms

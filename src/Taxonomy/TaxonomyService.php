@@ -7,6 +7,8 @@ use ActiveLAMP\Taxonomy\Doctrine\EventListener\PrepareEntityTerms;
 use ActiveLAMP\Taxonomy\Doctrine\EventListener\RelatedEntities;
 use ActiveLAMP\Taxonomy\Doctrine\EventListener\RemoveEntityTerms;
 use ActiveLAMP\Taxonomy\Entity\EntityTerm;
+use ActiveLAMP\Taxonomy\Entity\EntityTermInterface;
+use Doctrine\Common\EventManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 
@@ -16,6 +18,8 @@ use Doctrine\ORM\EntityManager;
  */
 class TaxonomyService extends AbstractTaxonomyService
 {
+    protected $subscribers;
+
     public function __construct(ObjectManager $manager)
     {
         /** @var $manager EntityManager */
@@ -25,18 +29,25 @@ class TaxonomyService extends AbstractTaxonomyService
 
         parent::__construct($manager);
 
+        $this->subscribers = array(
+            new LoadVocabularyFields($this),
+            new PrepareEntityTerms($this),
+            new RelatedEntities($this),
+            new RemoveEntityTerms($this),
+        );
+
         $eventManager = $manager->getEventManager();
-        $eventManager->addEventSubscriber(new LoadVocabularyFields($this));
-        $eventManager->addEventSubscriber(new PrepareEntityTerms($this));
-        $eventManager->addEventSubscriber(new RelatedEntities($this));
-        $eventManager->addEventSubscriber(new RemoveEntityTerms($this));
+
+        foreach ($this->subscribers as $subscriber) {
+            $eventManager->addEventSubscriber($subscriber);
+        }
     }
 
     /**
-     * @param EntityTerm $entityTerm
+     * @param EntityTermInterface $entityTerm
      * @param bool $flush
      */
-    public function saveEntityTerm(EntityTerm $entityTerm, $flush = true)
+    public function saveEntityTerm(EntityTermInterface $entityTerm, $flush = true)
     {
         //Injection of entity-type and entity-identifier is done with PrepareEntityTerms subscriber.
         $this->em->persist($entityTerm);
@@ -46,5 +57,13 @@ class TaxonomyService extends AbstractTaxonomyService
         }
     }
 
+    public function detach()
+    {
+        /** @var $events EventManager */
+        $events = $this->em->getEventManager();
 
+        foreach ($this->subscribers as $subscriber) {
+            $events->removeEventSubscriber($subscriber);
+        }
+    }
 }

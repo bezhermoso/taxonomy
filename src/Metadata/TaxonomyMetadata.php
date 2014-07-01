@@ -1,12 +1,13 @@
 <?php
 
 namespace ActiveLAMP\Taxonomy\Metadata;
+use Traversable;
 
 
 /**
  * @author Bez Hermoso <bez@activelamp.com>
  */
-class TaxonomyMetadata 
+class TaxonomyMetadata implements \Countable, \IteratorAggregate
 {
     /**
      * @var array|Entity[]
@@ -69,5 +70,31 @@ class TaxonomyMetadata
     public function getAllEntityMetadata()
     {
         return $this->entityMetadata;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.1.0)<br/>
+     * Count elements of an object
+     * @link http://php.net/manual/en/countable.count.php
+     * @return int The custom count as an integer.
+     * </p>
+     * <p>
+     * The return value is cast to an integer.
+     */
+    public function count()
+    {
+        return count($this->entityMetadata);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Retrieve an external iterator
+     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @return Traversable An instance of an object implementing <b>Iterator</b> or
+     * <b>Traversable</b>
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->entityMetadata);
     }
 }

@@ -1,4 +1,4 @@
-Vocabulary:
+ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Vocabulary:
     type: entity
     table: taxonomy_vocabulary
     repositoryClass: ActiveLAMP\Taxonomy\Entity\Repository\VocabularyRepository
@@ -13,14 +13,14 @@ Vocabulary:
             id: true
             generator:
                 strategy: IDENTITY
-        labelName:
+        label:
             type: string
             scale: 0
             length: 255
             unique: false
             nullable: false
             precision: 0
-            column: label_name
+            column: label
         name:
             type: string
             scale: 0
@@ -37,7 +37,7 @@ Vocabulary:
             precision: 0
     oneToMany:
         terms:
-            targetEntity: TermInterface
+            targetEntity: ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Term
             cascade:
                 - remove
             mappedBy: vocabulary

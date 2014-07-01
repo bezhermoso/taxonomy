@@ -14,27 +14,27 @@ abstract class Vocabulary implements VocabularyInterface
     /**
      * @var int
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      */
-    private $label;
+    protected $label;
 
     /**
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
      */
-    private $description;
+    protected $description;
 
     /**
      * @var ArrayCollection|TermInterface[]
      */
-    private $terms;
+    protected $terms;
 
     public function __construct()
     {

@@ -13,7 +13,7 @@ class Vocabulary
     /**
      * @var \ReflectionProperty
      */
-    protected $field;
+    protected $property;
 
     /**
      * @var string
@@ -26,13 +26,13 @@ class Vocabulary
     protected $singular = false;
 
     /**
-     * @param \ReflectionProperty $field
+     * @param \ReflectionProperty $property
      * @param $name
      * @param bool $singular
      */
-    public function __construct(\ReflectionProperty $field, $name, $singular)
+    public function __construct(\ReflectionProperty $property, $name, $singular)
     {
-        $this->field = $field;
+        $this->property = $property;
         $this->name = $name;
         $this->singular = $singular;
     }
@@ -42,9 +42,9 @@ class Vocabulary
         return $this->name;
     }
 
-    public function getFieldName()
+    public function getPropertyName()
     {
-        return $this->field->getName();
+        return $this->property->getName();
     }
 
     public function isSingular()
@@ -54,7 +54,7 @@ class Vocabulary
 
     public function getReflectionProperty()
     {
-        return $this->field;
+        return $this->property;
     }
 
     /**
@@ -63,17 +63,17 @@ class Vocabulary
      */
     public function extractValueInField($entity)
     {
-        $this->field->setAccessible(true);
-        $field = $this->field->getValue($entity);
-        $this->field->setAccessible(false);
+        $this->property->setAccessible(true);
+        $field = $this->property->getValue($entity);
+        $this->property->setAccessible(false);
 
         return $field;
     }
 
     public function setVocabularyField($field, $entity)
     {
-        $this->field->setAccessible(true);
-        $this->field->setValue($entity, $field);
-        $this->field->setAccessible(false);
+        $this->property->setAccessible(true);
+        $this->property->setValue($entity, $field);
+        $this->property->setAccessible(false);
     }
 } 

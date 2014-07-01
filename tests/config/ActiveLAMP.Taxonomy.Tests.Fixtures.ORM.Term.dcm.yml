@@ -1,4 +1,4 @@
-Term:
+ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Term:
     type: mappedSuperclass
     repositoryClass: ActiveLAMP\Taxonomy\Entity\Repository\TermRepository
     fields:
@@ -35,7 +35,7 @@ Term:
             precision: 0
     manyToOne:
         vocabulary:
-            targetEntity: VocabularyInterface
+            targetEntity: ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Vocabulary
             cascade: {  }
             mappedBy: null
             inversedBy: terms
@@ -45,7 +45,7 @@ Term:
             orphanRemoval: false
     oneToMany:
         entityTerms:
-            targetEntity: EntityTermInterface
+            targetEntity: ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\EntityTerm
             cascade:
                 - remove
             mappedBy: term

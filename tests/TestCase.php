@@ -17,12 +17,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * @var ContainerInterface
      */
-    static $container;
+    public static $container;
 
     /**
      * @var EntityManager
      */
-    static $em;
+    public static $em;
 
     /**
      * @return ContainerInterface
@@ -40,17 +40,16 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return static::$container;
     }
 
+    /**
+     * @return EntityManager
+     */
     public static function getEntityManager()
     {
         if (static::$em === null) {
-
-            $conn = array(
-                'driver' => 'pdo_sqlite',
-                'path' => __DIR__ . '/test.db',
-            );
-
-            $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__ . '/Fixtures'), true);
-            $em = EntityManager::create($conn, $config);
+            $em = include __DIR__ . '/config/em.php';
+            static::$em = $em;
         }
+
+        return static::$em;
     }
 }
