@@ -3,12 +3,13 @@
 
 namespace ActiveLAMP\Taxonomy\Tests\Fixtures\ORM;
 
-use ActiveLAMP\Taxonomy\Entity\Vocabulary as  BaseVocabulary;
 
 /**
+ * Class Foo
+ *
  * @author Bez Hermoso <bez@activelamp.com>
  */
-class Vocabulary extends BaseVocabulary
+class Foo 
 {
-
-}
+    protected $id;
+} 

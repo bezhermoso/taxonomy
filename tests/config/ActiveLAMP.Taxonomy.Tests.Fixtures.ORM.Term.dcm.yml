@@ -1,6 +1,6 @@
 ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Term:
-    type: mappedSuperclass
-    repositoryClass: ActiveLAMP\Taxonomy\Entity\Repository\TermRepository
+    type: entity
+    repositoryClass: ActiveLAMP\Taxonomy\Doctrine\ORM\TermRepository
     fields:
         id:
             type: integer

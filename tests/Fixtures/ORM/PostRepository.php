@@ -2,13 +2,15 @@
 
 
 namespace ActiveLAMP\Taxonomy\Tests\Fixtures\ORM;
+use Doctrine\ORM\EntityRepository;
 
-use ActiveLAMP\Taxonomy\Entity\Vocabulary as  BaseVocabulary;
 
 /**
+ * Class PostRepository
+ *
  * @author Bez Hermoso <bez@activelamp.com>
  */
-class Vocabulary extends BaseVocabulary
+class PostRepository extends EntityRepository
 {
 
-}
+} 

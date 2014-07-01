@@ -4,6 +4,7 @@
 namespace ActiveLAMP\Taxonomy\Tests\Metadata;
 
 use ActiveLAMP\Taxonomy\Metadata\MetadataFactory;
+use ActiveLAMP\Taxonomy\Metadata\Reader\AnnotationReader;
 use ActiveLAMP\Taxonomy\Tests\TestCase;
 
 class AnnotationReaderTest extends TestCase
@@ -20,9 +21,8 @@ class AnnotationReaderTest extends TestCase
 
     public function testMetadata()
     {
-        $factory = new MetadataFactory();
+        $factory = new MetadataFactory(new AnnotationReader());
         $metadata = $factory->getMetadata($this->_em);
-
         $this->assertCount(2, $metadata);
 
         $this->assertTrue($metadata->hasEntityMetadata('ActiveLAMP\\Taxonomy\\Tests\\Fixtures\\ORM\\Post'));

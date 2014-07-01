@@ -1,5 +1,0 @@
-config:
-  class: Doctrine\ORM\Configuration
-  factory_class: Doctrine\ORM\Tools\Setup
-  factory_method: createAnnotationMetadataConfiguration
-

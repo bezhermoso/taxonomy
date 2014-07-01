@@ -21,6 +21,10 @@ class Post
 
     protected $body;
 
+    protected $title;
+
+    protected $slug;
+
     public function getId()
     {
         return $this->id;
@@ -54,5 +58,37 @@ class Post
         } else {
             $this->category = $category;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 } 

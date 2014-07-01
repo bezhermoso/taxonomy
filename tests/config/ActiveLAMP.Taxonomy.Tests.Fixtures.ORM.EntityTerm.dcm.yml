@@ -1,6 +1,6 @@
 ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\EntityTerm:
     type: entity
-    repositoryClass: ActiveLAMP\Taxonomy\Entity\Repository\EntityTermRepository
+    repositoryClass: ActiveLAMP\Taxonomy\Doctrine\ORM\EntityTermRepository
     fields:
         id:
             type: integer

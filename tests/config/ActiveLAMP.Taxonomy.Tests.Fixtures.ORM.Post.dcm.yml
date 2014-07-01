@@ -1,5 +1,6 @@
 ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Post:
     type: entity
+    repositoryClass: ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\PostRepository
     fields:
         id:
             type: integer
@@ -16,3 +17,15 @@ ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Post:
             unique: false
             nullable: true
             precision: 0
+
+        title:
+            type: string
+            unique: false
+            nullable: false
+            length: 100
+
+        slug:
+            type: string
+            unique: true
+            nullable: false
+            length: 100

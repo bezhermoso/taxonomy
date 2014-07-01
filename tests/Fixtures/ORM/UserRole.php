@@ -43,4 +43,9 @@ class UserRole
     {
         return $this->roles;
     }
+
+    public function getId()
+    {
+        return $this->id;
+    }
 }

@@ -1,7 +1,6 @@
 ActiveLAMP\Taxonomy\Tests\Fixtures\ORM\Vocabulary:
     type: entity
-    table: taxonomy_vocabulary
-    repositoryClass: ActiveLAMP\Taxonomy\Entity\Repository\VocabularyRepository
+    repositoryClass: ActiveLAMP\Taxonomy\Doctrine\ORM\VocabularyRepository
     fields:
         id:
             type: integer

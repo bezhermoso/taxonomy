@@ -10,5 +10,5 @@ $conn = array(
 
 $config = Setup::createYAMLMetadataConfiguration(array(__DIR__), true);
 $em = EntityManager::create($conn, $config);
-
+$config->addEntityNamespace('Test', 'ActiveLAMP\\Taxonomy\\Tests\\Fixtures\\ORM');
 return $em;
