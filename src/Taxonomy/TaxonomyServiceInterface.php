@@ -28,8 +28,10 @@ interface TaxonomyServiceInterface
 
     /**
      * @param VocabularyInterface $vocabulary
+     * @param $flush
+     * @return
      */
-    public function saveVocabulary(VocabularyInterface $vocabulary);
+    public function saveVocabulary(VocabularyInterface $vocabulary, $flush = true);
 
     /**
      * @return VocabularyInterface[]|array
@@ -85,8 +87,9 @@ interface TaxonomyServiceInterface
     /**
      * @param TermInterface $term
      * @throws \DomainException
+     * @param bool $flush
      */
-    public function saveTerm(TermInterface $term);
+    public function saveTerm(TermInterface $term, $flush = true);
 
     /**
      * @return TermInterface[]|array
@@ -98,4 +101,19 @@ interface TaxonomyServiceInterface
      * @return ArrayCollection
      */
     public function findTermsInVocabulary($vocabulary);
+
+    /**
+     * @return string
+     */
+    public function getTermClass();
+
+    /**
+     * @return string
+     */
+    public function getVocabularyClass();
+
+    /**
+     * @return string
+     */
+    public function getEntityTermClass();
 }

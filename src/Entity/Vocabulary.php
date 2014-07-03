@@ -147,4 +147,21 @@ abstract class Vocabulary implements VocabularyInterface
             $this->terms->add($term);
         }
     }
+
+    /**
+     * @param TermInterface $term
+     * @return mixed
+     */
+    public function removeTerm(TermInterface $term)
+    {
+        $this->terms->removeElement($term);
+    }
+
+    /**
+     * @return TermInterface[]|array|ArrayCollection
+     */
+    public function getTerms()
+    {
+        return $this->terms;
+    }
 }

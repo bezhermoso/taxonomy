@@ -77,6 +77,17 @@ interface VocabularyInterface
     public function addTerm(TermInterface $term);
 
     /**
+     * @param TermInterface $term
+     * @return mixed
+     */
+    public function removeTerm(TermInterface $term);
+
+    /**
+     * @return TermInterface[]|array
+     */
+    public function getTerms();
+
+    /**
      * @return string
      */
     public function __toString();

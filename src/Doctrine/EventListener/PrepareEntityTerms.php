@@ -2,7 +2,7 @@
 
 namespace ActiveLAMP\Taxonomy\Doctrine\EventListener;
 
-use ActiveLAMP\Taxonomy\Entity\EntityTerm;
+use ActiveLAMP\Taxonomy\Entity\EntityTermInterface;
 use ActiveLAMP\Taxonomy\Taxonomy\TaxonomyServiceInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -43,7 +43,7 @@ class PrepareEntityTerms implements EventSubscriber
     {
         $entity = $eventArgs->getEntity();
 
-        if (!$entity instanceof EntityTerm) {
+        if (!$entity instanceof EntityTermInterface) {
             return;
         }
 

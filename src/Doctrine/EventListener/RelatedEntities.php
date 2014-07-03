@@ -2,7 +2,7 @@
 
 namespace ActiveLAMP\Taxonomy\Doctrine\EventListener;
 
-use ActiveLAMP\Taxonomy\Entity\EntityTerm;
+use ActiveLAMP\Taxonomy\Entity\EntityTermInterface;
 use ActiveLAMP\Taxonomy\Taxonomy\TaxonomyServiceInterface;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -50,7 +50,7 @@ class RelatedEntities implements EventSubscriber
     {
         $entityTerm = $eventArgs->getEntity();
 
-        if ($entityTerm instanceof EntityTerm) {
+        if ($entityTerm instanceof EntityTermInterface) {
 
             $metadata = $this->service->getMetadata()->getEntityMetadata($entityTerm->getEntityType());
             $entity = $eventArgs->getEntityManager()

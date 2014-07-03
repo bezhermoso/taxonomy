@@ -182,16 +182,20 @@ abstract class AbstractTaxonomyService implements TaxonomyServiceInterface
 
     /**
      * @param TermInterface $term
+     * @param bool $flush
      * @throws \DomainException
      */
-    public function saveTerm(TermInterface $term)
+    public function saveTerm(TermInterface $term, $flush = true)
     {
         if (!$term->getVocabulary()) {
             throw new \DomainException('Term must be assigned to a vocabulary before persisting it.');
         }
 
         $this->em->persist($term);
-        $this->em->flush();
+
+        if ($flush === true) {
+            $this->em->flush();
+        }
     }
 
     /**
@@ -205,11 +209,15 @@ abstract class AbstractTaxonomyService implements TaxonomyServiceInterface
 
     /**
      * @param VocabularyInterface $vocabulary
+     * @param $flush
      */
-    public function saveVocabulary(VocabularyInterface $vocabulary)
+    public function saveVocabulary(VocabularyInterface $vocabulary, $flush = true)
     {
         $this->em->persist($vocabulary);
-        $this->em->flush();
+
+        if ($flush === true) {
+            $this->em->flush();
+        }
     }
 
     /**
@@ -298,4 +306,30 @@ abstract class AbstractTaxonomyService implements TaxonomyServiceInterface
     {
         return $this->em;
     }
+
+    /**
+     * @return string
+     */
+    public function getTermClass()
+    {
+        return $this->termClass;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVocabularyClass()
+    {
+        return $this->vocabularyClass;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEntityTermClass()
+    {
+        return $this->entityTermClass;
+    }
+
+
 }
