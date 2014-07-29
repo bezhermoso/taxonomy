@@ -331,5 +331,47 @@ abstract class AbstractTaxonomyService implements TaxonomyServiceInterface
         return $this->entityTermClass;
     }
 
+    /**
+     * @return VocabularyInterface
+     */
+    public function createVocabulary()
+    {
+        $class = $this->getVocabularyClass();
+        return new $class();
+    }
+
+    /**
+     * @param VocabularyInterface $vocabulary
+     *
+     * @throws \InvalidArgumentException
+     * @return TermInterface
+     */
+    public function createTerm(VocabularyInterface $vocabulary = null)
+    {
+        $class = $this->getTermClass();
+
+        /** @var $term TermInterface */
+        $term = new $class();
+
+        if ($vocabulary !== null) {
+
+            if (!is_a($vocabulary, $this->getVocabularyClass())) {
+                throw new \InvalidArgumentException('Vocabulary provided must be instance of ' . $this->getVocabularyClass());
+            }
+
+            $term->setVocabulary($vocabulary);
+        }
+
+        return $term;
+    }
+
+    /**
+     * @return EntityTermInterface
+     */
+    public function createEntityTerm()
+    {
+        $class = $this->getEntityTermClass();
+        return new $class();
+    }
 
 }

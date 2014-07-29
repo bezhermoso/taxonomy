@@ -116,4 +116,21 @@ interface TaxonomyServiceInterface
      * @return string
      */
     public function getEntityTermClass();
+
+    /**
+     * @return VocabularyInterface
+     */
+    public function createVocabulary();
+
+    /**
+     * @param VocabularyInterface $vocabulary
+     *
+     * @return TermInterface
+     */
+    public function createTerm(VocabularyInterface $vocabulary = null);
+
+    /**
+     * @return EntityTermInterface
+     */
+    public function createEntityTerm();
 }

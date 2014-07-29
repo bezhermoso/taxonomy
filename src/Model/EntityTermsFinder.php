@@ -22,18 +22,21 @@ class EntityTermsFinder
 
     protected $em;
 
+    protected $entityTermClass;
+
     /**
      * @param ObjectManager $manager
      * @param VocabularyInterface $vocabulary
      * @param $type
      * @param $identifier
      */
-    public function __construct(ObjectManager $manager, VocabularyInterface $vocabulary, $type, $identifier)
+    public function __construct(ObjectManager $manager, VocabularyInterface $vocabulary, $entityTermClass, $type, $identifier)
     {
         $this->em = $manager;
         $this->vocabulary = $vocabulary;
         $this->type = $type;
         $this->identifier = $identifier;
+        $this->entityTermClass = $entityTermClass;
     }
 
     /**
@@ -42,7 +45,7 @@ class EntityTermsFinder
     public function find()
     {
         $eTerms = $this->em
-            ->getRepository('ALTaxonomyBundle:EntityTerm')
+            ->getRepository($this->entityTermClass)
             ->createQueryBuilder('et')
             ->innerJoin('et.term', 't')
             ->innerJoin('t.vocabulary', 'v')
@@ -65,7 +68,7 @@ class EntityTermsFinder
     public function findOne()
     {
         $eTerm = $this->em
-            ->getRepository('ALTaxonomyBundle:EntityTerm')
+            ->getRepository($this->entityTermClass)
             ->createQueryBuilder('et')
             ->innerJoin('et.term', 't')
             ->innerJoin('t.vocabulary', 'v')
